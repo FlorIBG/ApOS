@@ -24,7 +24,7 @@ function go(){
 		var span3Id = document.getElementsByClassName("input")[1];	
 			span3Id.appendChild(span3);
 	}
-	else if (!(password=='') && !(email=='')){ 
+	if (!(password=='') && !(email=='')){ 
         document.form.submit(); 
     }else { 
         var span4 = document.createElement("span");
