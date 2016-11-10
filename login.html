@@ -1,27 +1,138 @@
 <!DOCTYPE>
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Login</title>
-		<link href="https://fonts.googleapis.com/css?family=Prompt:200,300,400,500" rel="stylesheet">
-		<link rel="stylesheet" href="CSS/login.css">
-		<!-- <script src="bower_components/firebase/firebase.js"></script> -->
-	</head>
-	<body>
-		<FORM name=form action="TU_PAGINA_WEB.HTML" method="post">
-			<div class="input">
-				<P>Usuario:</p>    
-				<INPUT type=text name="login" id="email" placeholder="Ingresa tu correo electrónico"> 
-			</div>
-			<div class="input">
-				<P>Contraseña:</P>
-				<INPUT type=password name="password" placeholder="Ingresa tu contraseña">
-			</div> 
-			<div class="input"></div>
-			<button onclick=go() type=button value=Acceder>
-				Ingresar
-			</button>
-		</FORM> 
-	<script type='text/javascript' src='JS/login.js'></script> 
-	</body>
-</html>
+	<html>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<title>Login</title>
+			<link href="https://fonts.googleapis.com/css?family=Prompt:200,300,400,500" rel="stylesheet">
+			<link rel="stylesheet" href="CSS/login.css">
+
+			<script type='text/javascript' src='JS/login.js'></script> 
+
+		<script src="https://www.gstatic.com/firebasejs/3.6.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyCyBq9-Gz9AakxuBrhpgJAWi2o_aAQDoRg",
+	    authDomain: "olimpiadas-especiales.firebaseapp.com",
+	    databaseURL: "https://olimpiadas-especiales.firebaseio.com",
+	    storageBucket: "olimpiadas-especiales.appspot.com",
+	    messagingSenderId: "784836908465"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+	<script type="text/javascript">
+		
+    /**
+     * Handles the sign in button press.
+     */
+   function attemptLogin() {
+
+   	var email = document.getElementsByName("login")[0].value;
+		var password = document.getElementsByName("password")[0].value;
+
+		// TODO: Should be a data validation function 
+
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
+		var spanEmail = document.getElementById('spanEmail');
+		var spanEmailFormat = document.getElementById('spanEmailFormat');
+		var spanPassword = document.getElementById('spanPassword');
+
+		if (email == null || email.length == 0 || /^\s+$/.test(email)) {
+			let spanMessage = document.createElement("span");
+			spanMessage.setAttribute("id", "spanEmail");
+
+			let spanId = document.getElementsByClassName("input")[0];	
+
+			spanMessage.innerHTML = "No has ingresado ningun correo";
+			spanId.appendChild(spanMessage);
+		} 
+		else if (!re.test(email)) {
+			let spanMessage = document.createElement("span");
+			spanMessage.setAttribute("id", "spanEmailFormat");
+			let spanId = document.getElementsByClassName("input")[0];	
+
+			spanMessage.innerHTML = "El formato del correo electrónico no es válido";
+			spanId.appendChild(spanMessage);
+		} 
+
+
+		if (password== null || password.length == 0 || /^\s+$/.test(password)) {
+			let spanMessage = document.createElement("span");
+			spanMessage.setAttribute("id", "spanPassword");
+
+			let spanId = document.getElementsByClassName("input")[1];	
+
+			spanMessage.innerHTML = "No has ingresado ninguna contraseña";
+			spanId.appendChild(spanMessage);
+		}
+
+		// END data validation function
+
+		if (!(password=='') && !(email=='')){ 
+			if (firebase.auth().currentUser) {
+        // [START signout]
+        	firebase.auth().signOut();
+        // [END signout]
+      	}
+      	else {
+      	// Sign in with email and pass.
+        // [START authwithemail]
+      		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+          // Handle Errors here.
+         		var errorCode = error.code;
+          		var errorMessage = error.message;
+          	// [START_EXCLUDE]
+          		if (errorCode === 'auth/wrong-password') {
+            	console.log('Wrong password');
+          		}
+          		else {
+            		console.log('Some wrong caused by: '+errorMessage);
+          		}
+          		console.log('Error: '+error);
+        		});
+      	}
+   	}
+	}
+
+   function initApp() {
+   	firebase.auth().onAuthStateChanged(function(user) {
+ 			if (user != null) {
+          // User is signed in.
+         	var userEmail = user.email;
+          	console.log('ACCESS OK with: '+userEmail);
+ 			}
+   	});
+    }
+
+    window.onload = function() {
+      initApp();
+    };
+
+
+	</script>
+
+		</head>
+		<body>
+			<FORM name=form action="TU_PAGINA_WEB.HTML" method="post">
+				<div class="input">
+					<P>Usuario:</p>    
+					<INPUT type=text name="login" id="email" placeholder="Ingresa tu correo electrónico"> 
+				</div>
+				<div class="input">
+					<P>Contraseña:</P>
+					<INPUT type=password name="password" placeholder="Ingresa tu contraseña">
+				</div> 
+				<div class="input"></div>
+				<button onclick=attemptLogin() type=button value=Acceder>
+					Ingresar
+				</button>
+			</FORM> 
+		</body>
+	</html>
+
+
+
+
