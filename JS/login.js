@@ -1,4 +1,5 @@
 function go(){
+
 	var spans = document.getElementsByTagName("span");
 		while (spans.length>0) {
 			spans[0].parentElement.removeChild(spans[0]);
@@ -27,7 +28,8 @@ function go(){
 			span3Id.appendChild(span3);
 	}
 	if (password=='hola' && email=='florivonne.bg@gmail.com'){ 
-        document.form.submit(); 
+        showLoader();
+        myFunction();
     }else { 
         var span4 = document.createElement("span");
         span4.setAttribute("class","removerSpan")
@@ -38,6 +40,7 @@ function go(){
     }
 }
 window.onload = function() {
+	document.getElementById("loader").style.display = "none";
 	var email = document.getElementsByName("login")[0];
 	email.addEventListener("keyup",input);
 	var password = document.getElementsByName("password")[0];
@@ -55,4 +58,16 @@ function input(ev) {
 		spans4[0].remove();
 	}
 	//span4.removeChild();
+}
+function myFunction() {
+    var myVar = setTimeout(showPage, 3000);
+}
+
+function showPage() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("myDiv").style.display = "block";
+}
+
+function showLoader() {
+  document.getElementById("loader").style.display = "inline";
 }
